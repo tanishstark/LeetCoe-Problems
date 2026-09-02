@@ -1,31 +1,57 @@
 class Solution {
     public boolean backspaceCompare(String s, String t) {
-        StringBuilder str1 = new StringBuilder("");
-        StringBuilder str2 = new StringBuilder("");
 
-        int left = 0;
-        int right = 0;
+        int i = s.length() - 1;
+        int j = t.length() - 1;
 
-        while(left < s.length()){
-            if(s.charAt(left) == '#' && str1.length() > 0){
-                str1.deleteCharAt(str1.length() - 1);
-            }else if(s.charAt(left) != '#'){
-                str1.append(s.charAt(left));    
+        int skipS = 0;
+        int skipT = 0;
+
+        while (i >= 0 || j >= 0) {
+
+            // Find next valid character in s
+            while (i >= 0) {
+                if (s.charAt(i) == '#') {
+                    skipS++;
+                    i--;
+                } 
+                else if (skipS > 0) {
+                    skipS--;
+                    i--;
+                } 
+                else {
+                    break;
+                }
             }
-            left++;
-        }
-        left = 0;
-        while(left < t.length()){
-            if(t.charAt(left) == '#' && str2.length() > 0){
-                str2.deleteCharAt(str2.length() - 1);
 
-            }else if(t.charAt(left) != '#'){
-                str2.append(t.charAt(left));
-                  
+            // Find next valid character in t
+            while (j >= 0) {
+                if (t.charAt(j) == '#') {
+                    skipT++;
+                    j--;
+                } 
+                else if (skipT > 0) {
+                    skipT--;
+                    j--;
+                } 
+                else {
+                    break;
+                }
             }
-            left++;
+
+            // One string has a character, other doesn't
+            if (i >= 0 && j < 0) return false;
+            if (i < 0 && j >= 0) return false;
+
+            // Compare characters
+            if (i >= 0 && j >= 0 && s.charAt(i) != t.charAt(j)) {
+                return false;
+            }
+
+            i--;
+            j--;
         }
 
-        return str1.compareTo(str2) == 0;
+        return true;
     }
 }
